@@ -1,4 +1,4 @@
-import {BadRequestException, Controller, Delete, Get, Header, HttpCode, Param, Post} from "@nestjs/common";
+import {BadRequestException, Body, Controller, Delete, Get, Header, HttpCode, Param, Post, Query} from "@nestjs/common";
 
 //  http:/127.0.0.1:3001/juegos-http
 @Controller('juegos-http')
@@ -8,7 +8,7 @@ export class HttpJuegoController {
 
     holaGet(){
         throw new BadRequestException('No envia nada')
-        //return 'Hola, te pico la cola 😝 ... GET';
+        return 'Hola, te pico la cola 😝 ... GET';
     }
 
     @Post('hola')
@@ -47,6 +47,25 @@ export class HttpJuegoController {
         else
             throw new BadRequestException('Error capa 8: Altura no es un numero');
         return edad+altura;
+    }
+
+    @Get('/parametros-consulta')
+    parametrosConsultaEjemplo(
+        @Query() parametrosConsulta
+    ){
+        console.log('Parametros de Consulta: ', parametrosConsulta);
+        if (parametrosConsulta.nombre && parametrosConsulta.apellido)
+            return parametrosConsulta.nombre + ' ' + parametrosConsulta.apellido;
+        else
+            return("😃");
+    }
+
+    @Post('/parametros-cuerpo')
+    parametrosCuerpoEjemplo(
+        @Body() parametrosCuerpo
+    ){
+        console.log('Parametros de cuerpo: ', parametrosCuerpo)
+        return '☺ Registro exitoso'
     }
 
 }
