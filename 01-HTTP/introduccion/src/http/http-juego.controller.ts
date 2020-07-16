@@ -1,4 +1,17 @@
-import {BadRequestException, Body, Controller, Delete, Get, Header, HttpCode, Param, Post, Query} from "@nestjs/common";
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Header,
+    HttpCode,
+    Param,
+    Post,
+    Query, Req, Res
+} from "@nestjs/common";
+import {MascotaCreateDto} from "./DTO/mascota.create-dto";
+import {validate, ValidationError} from "class-validator";
 
 //  http:/127.0.0.1:3001/juegos-http
 @Controller('juegos-http')
@@ -61,11 +74,68 @@ export class HttpJuegoController {
     }
 
     @Post('/parametros-cuerpo')
-    parametrosCuerpoEjemplo(
+    async parametrosCuerpoEjemplo(
         @Body() parametrosCuerpo
-    ){
-        console.log('Parametros de cuerpo: ', parametrosCuerpo)
-        return '☺ Registro exitoso'
+    ) {
+        // Validador
+        const mascotaValidador = new MascotaCreateDto();
+        mascotaValidador.casada = parametrosCuerpo.casada;
+        mascotaValidador.edad = parametrosCuerpo.edad;
+        mascotaValidador.ligada = parametrosCuerpo.ligada;
+        mascotaValidador.nombre = parametrosCuerpo.nombre;
+        mascotaValidador.peso = parametrosCuerpo.peso;
+
+        try {
+            const errores: ValidationError[] = await validate(mascotaValidador);
+            if (errores.length > 0) {
+                console.error('Error', errores);
+                throw new BadRequestException('Error al validar.')
+            } else {
+                const mensajeCorrecto = {
+                    mensaje: 'Se creo correctamente'
+                }
+                return mensajeCorrecto;
+            }
+        } catch (e) {
+            console.error('Error', e);
+            throw new BadRequestException('Error al validar.')
+        }
     }
 
+    @Get('/guardarCookieInsegura')
+    guardarCookkieInsegura(
+        @Query() parametrosConsulta,
+        @Req() req,     //peticion
+        @Res() res      //respuesta
+    ) {
+        res.cookie(
+            'galletaInsegura', //Nombre
+            'Tengo hambre', //Valor
+            );
+        res.send({
+            mensaje: 'ok'
+        })
+    }
+
+    @Get('/mostrarCookies')
+    mostrarCookies(
+        @Req() req
+    ) {
+        const mensaje = {
+            sinFirmar: req.cookies,
+            firmadas: req.signedCookies
+        };
+        return mensaje;
+    }
+
+    @Get('/guardarCookieFirmada')
+    guardarCookieFirmada(
+        @Res() res
+    ){
+        res.cookie('firmada', 'poliburguer', {signed: true});
+        const mensaje = {
+            mensaje: 'ok'
+        };
+        res.send(mensaje);
+    }
 }
