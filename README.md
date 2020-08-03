@@ -2,11 +2,11 @@
 
 Aplicaciones Web 2020A Inchiglema Nicolas
 
-#Deber 1
+# Deber 1
 01-HTTP/introduccion/src/Deber1
 
-#Examen 1er biemstre
+# Examen 1er biemstre
 01-HTTP/introduccion/src/Examen
 
-#Proyecto
+# Proyecto
 Integrantes: Lesly Tello y Nicolas Inchiglema
