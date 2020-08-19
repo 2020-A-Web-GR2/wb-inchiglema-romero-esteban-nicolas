@@ -1,4 +1,5 @@
-import {Column, Entity, Index, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, Index, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {MascotaEntity} from "../mascota/mascota.entity";
 
 @Index([
     'nombre',
@@ -47,7 +48,7 @@ export class UsuarioEntity {
         type: 'varchar',
         nullable: false,
         unique: true,
-        length: '18'
+        length: '10'
     })
     cedula: string;
 
@@ -72,4 +73,10 @@ export class UsuarioEntity {
         name: 'fecha_nacimiento_nacimiento'
     })
     fechaHoraNacimiento?: string;
+
+    @OneToMany(
+        type => MascotaEntity,
+        mascota => mascota.usuario
+    )
+    mascotas: MascotaEntity[];
 }
