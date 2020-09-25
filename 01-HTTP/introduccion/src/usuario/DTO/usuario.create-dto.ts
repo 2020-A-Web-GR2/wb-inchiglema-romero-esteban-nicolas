@@ -28,7 +28,7 @@ export class UsuarioCreateDto{
 
     @IsNotEmpty()
     @IsNumberString()
-    @Length(10)
+    @Length(10,10)
     cedula:string;
 
     @IsOptional()

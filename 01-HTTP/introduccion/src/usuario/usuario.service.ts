@@ -1,9 +1,7 @@
 import {Injectable} from "@nestjs/common";
-import {Repository} from "typeorm";
+import {FindManyOptions, Like, Repository} from "typeorm";
 import {UsuarioEntity} from "./usuario.entity";
 import {InjectRepository} from "@nestjs/typeorm";
-import {UsuarioCreateDto} from "./DTO/usuario.create-dto";
-import {UsuarioUpdateDto} from "./DTO/usuario.update-dto";
 
 @Injectable()
 export class usuarioService {
@@ -17,8 +15,25 @@ export class usuarioService {
         return this.repositorio.save(usuario);
     }
 
-    buscarTodos(){
-        return this.repositorio.find();
+    buscarTodos(textoDeConsulta?:String){
+        if (textoDeConsulta !== undefined) {
+            const consulta: FindManyOptions<UsuarioEntity> = {
+                where: [
+                    {
+                        nombre: Like(`%${textoDeConsulta}%`)
+                    },
+                    {
+                        apellido: Like(`%${textoDeConsulta}%`)
+                    },
+                    {
+                        cedula: Like(`%${textoDeConsulta}%`)
+                    }
+                ]
+            }
+            return this.repositorio.find(consulta);
+        } else{
+            return this.repositorio.find();
+        }
     }
 
     buscarUno(id: number){
